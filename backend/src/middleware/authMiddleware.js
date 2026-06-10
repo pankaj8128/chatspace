@@ -67,4 +67,15 @@ const authenticateSocket = async (socket, next) => {
   }
 };
 
-module.exports = { protect, authenticateSocket };
+// Middleware to block guest actions (like creating/deleting rooms)
+const restrictGuests = (req, res, next) => {
+  if (req.user && req.user.username.startsWith("guest_")) {
+    return res.status(403).json({
+      success: false,
+      message: "Guest accounts are not authorized to perform this action. Please register an account.",
+    });
+  }
+  next();
+};
+
+module.exports = { protect, authenticateSocket, restrictGuests };

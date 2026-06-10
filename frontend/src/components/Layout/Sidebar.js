@@ -38,6 +38,8 @@ const Sidebar = () => {
     }
   };
 
+  const isGuest = user?.username?.startsWith("guest_");
+
   return (
     <aside className="sidebar">
       <div className="sidebar__brand">
@@ -47,16 +49,18 @@ const Sidebar = () => {
 
       <div className="sidebar__section-header">
         <span className="sidebar__section-label">Rooms</span>
-        <button
-          className="sidebar__icon-btn"
-          title="Create room"
-          onClick={() => {
-            setShowCreate((v) => !v);
-            setCreateError("");
-          }}
-        >
-          {showCreate ? "✕" : "+"}
-        </button>
+        {!isGuest && (
+          <button
+            className="sidebar__icon-btn"
+            title="Create room"
+            onClick={() => {
+              setShowCreate((v) => !v);
+              setCreateError("");
+            }}
+          >
+            {showCreate ? "✕" : "+"}
+          </button>
+        )}
       </div>
 
       {showCreate && (
