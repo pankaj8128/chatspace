@@ -1,0 +1,44 @@
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 20px 6px;
+  min-height: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+.typing-indicator--empty {
+  min-height: 24px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.typing-dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.typing-dots span {
+  width: 5px; height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+.typing-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
