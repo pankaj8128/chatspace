@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useAuth } from "../../context/AuthContext";
 import MessageInput from "./MessageInput";
@@ -86,11 +86,14 @@ const ChatRoom = ({ onToggleSidebar, onToggleOnlineUsers }) => {
 
   // Reset pagination state when switching rooms
   useEffect(() => {
-    if (activeRoom) {
-      setPage(1);
-      setHasMore(roomMessages.length >= 50);
-    }
-  }, [activeRoom?._id, roomMessages.length >= 50]);
+    setPage(1);
+  }, [activeRoom?._id]);
+
+  // Update hasMore status based on messages array size
+  const hasMinMessagesForMore = roomMessages.length >= 50;
+  useEffect(() => {
+    setHasMore(hasMinMessagesForMore);
+  }, [activeRoom?._id, hasMinMessagesForMore]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMore) return;
