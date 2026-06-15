@@ -77,7 +77,8 @@ const ChatRoom = ({ onToggleSidebar, onToggleOnlineUsers }) => {
   const bottomRef = useRef(null);
   const containerRef = useRef(null);
 
-  const roomMessages = activeRoom ? messages[activeRoom._id] || [] : [];
+  const roomMessagesRaw = activeRoom ? messages[activeRoom._id] : undefined;
+  const roomMessages = roomMessagesRaw || [];
   const grouped = groupMessages(roomMessages);
 
   const [page, setPage] = useState(1);
@@ -155,22 +156,36 @@ const ChatRoom = ({ onToggleSidebar, onToggleOnlineUsers }) => {
       </div>
 
       <div className="chatroom__messages" ref={containerRef}>
-        {hasMore && (
-          <button
-            className="chatroom__load-more-btn"
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-          >
-            {loadingMore ? "Loading older messages..." : "Load older messages"}
-          </button>
-        )}
-
-        {roomMessages.length === 0 && (
-          <div className="chatroom__no-messages">
-            <span>🚀</span>
-            <p>No messages yet. Be the first to say something!</p>
+        {roomMessagesRaw === undefined ? (
+          <div className="chatroom__loading-initial">
+            <span className="chatroom__spinner chatroom__spinner--large"></span>
+            <p>Loading messages...</p>
           </div>
-        )}
+        ) : (
+          <>
+            {hasMore && (
+              <button
+                className="chatroom__load-more-btn"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? (
+                  <>
+                    <span className="chatroom__spinner"></span>
+                    Loading...
+                  </>
+                ) : (
+                  "Load older messages"
+                )}
+              </button>
+            )}
+
+            {roomMessages.length === 0 && (
+              <div className="chatroom__no-messages">
+                <span>🚀</span>
+                <p>No messages yet. Be the first to say something!</p>
+              </div>
+            )}
 
         {grouped.map((item) => {
           if (item.type === "dateDivider") {
@@ -228,6 +243,8 @@ const ChatRoom = ({ onToggleSidebar, onToggleOnlineUsers }) => {
             </div>
           );
         })}
+        </>
+        )}
 
         <div ref={bottomRef} />
       </div>

@@ -107,23 +107,29 @@ const crypto = require("crypto");
 // POST /api/auth/guest
 const guestLogin = async (req, res, next) => {
   try {
-    let username;
-    let isUnique = false;
+    const randomHex = crypto.randomBytes(4).toString("hex");
+    const username = `guest_${randomHex}`;
     
-    // Retry to guarantee username uniqueness
-    while (!isUnique) {
-      const randomHex = crypto.randomBytes(4).toString("hex");
-      username = `guest_${randomHex}`;
-      const existing = await User.findOne({ username });
-      if (!existing) {
-        isUnique = true;
-      }
-    }
+    // Generate a fake ObjectId for the guest so frontend mapping works
+    const mongoose = require("mongoose");
+    const fakeId = new mongoose.Types.ObjectId().toString();
 
-    const password = crypto.randomBytes(16).toString("hex");
+    const token = jwt.sign(
+      { id: fakeId, username, isGuest: true },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    );
 
-    const user = await User.create({ username, password });
-    sendTokenResponse(user, 201, res);
+    res.status(201).json({
+      success: true,
+      token,
+      user: {
+        _id: fakeId,
+        username,
+        isGuest: true,
+        createdAt: new Date(),
+      },
+    });
   } catch (error) {
     next(error);
   }

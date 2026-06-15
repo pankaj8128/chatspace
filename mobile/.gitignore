@@ -1,0 +1,45 @@
+# Built artifacts (Where your APKs and bundles live)
+build/
+app/build/
+
+# Local Android SDK paths (Specific to your Arch Linux setup)
+local.properties
+
+# Gradle cache and system files
+.gradle/
+.cxx/
+/captures/
+
+# Keystore files (NEVER commit your production signing keys!)
+*.keystore
+*.jks
+
+# Android Studio / IntelliJ files
+.idea/
+*.iml
+.modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# React Native / Metro
+.expo/
+*.jsc
+*.jsbundle
+
+# iOS
+ios/Pods/
+ios/build/
+ios/Index/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+
+# Env vars
+.env
+.env.local

@@ -21,6 +21,11 @@ const protect = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    if (decoded.isGuest) {
+      req.user = { _id: decoded.id, username: decoded.username, isGuest: true };
+      return next();
+    }
+
     // Attach user to request
     const user = await User.findById(decoded.id);
     if (!user) {
@@ -53,6 +58,12 @@ const authenticateSocket = async (socket, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    if (decoded.isGuest) {
+      socket.user = { _id: decoded.id, username: decoded.username, isGuest: true };
+      return next();
+    }
+
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -69,7 +80,7 @@ const authenticateSocket = async (socket, next) => {
 
 // Middleware to block guest actions (like creating/deleting rooms)
 const restrictGuests = (req, res, next) => {
-  if (req.user && req.user.username.startsWith("guest_")) {
+  if (req.user && (req.user.isGuest || req.user.username.startsWith("guest_"))) {
     return res.status(403).json({
       success: false,
       message: "Guest accounts are not authorized to perform this action. Please register an account.",

@@ -1,10 +1,11 @@
 # ChatSpace
 
-A real-time chat application with multiple group messaging rooms, online member trackers, chat history pagination, and a read-only guest browsing mode. Designed with a clean, responsive white UI scheme.
+A real-time cross-platform chat application with multiple group messaging rooms, online member trackers, chat history pagination, and a read-only guest browsing mode. Designed with a clean, responsive white UI scheme. Available as both a web application and a native mobile app (Android/iOS).
 
 ## Tech Stack
 
-- **Frontend:** React (Create React App) + CSS
+- **Frontend (Web):** React (Create React App) + CSS
+- **Frontend (Mobile):** React Native (CLI)
 - **Backend:** Node.js + Express + Socket.io
 - **Database:** MongoDB Atlas
 
@@ -15,8 +16,9 @@ A real-time chat application with multiple group messaging rooms, online member 
 - Real-time group messaging via WebSockets (Socket.io)
 - Real-time typing status indicators
 - Active online users tracker per room
-- Chat history pagination ("Load older messages")
-- Mobile-responsive layouts with sliding drawer navigation menus
+- Chat history pagination ("Load older messages") with smooth loading animations
+- Cross-platform availability (Web client & Native Mobile App)
+- Mobile-responsive web layouts with sliding drawer navigation menus
 - Clean white UI scheme with standard system fonts
 
 ## Local Setup
@@ -68,6 +70,26 @@ REACT_APP_API_URL=http://localhost:5000/api
 REACT_APP_SOCKET_URL=http://localhost:5000
 ```
 
+### 4. Mobile App (React Native)
+
+```bash
+cd mobile
+npm install
+```
+
+**Run on Android:**
+```bash
+npm run android
+```
+
+**Run on iOS:**
+```bash
+cd ios && pod install && cd ..
+npm run ios
+```
+
+Make sure your backend is running before testing the mobile app. You may need to change API endpoints from `localhost` to your computer's IP address if testing on a physical device.
+
 ## Project Structure
 
 ```
@@ -92,6 +114,15 @@ chat/
 │   │   ├── services/             # Axios api.js & Socket.io client config
 │   │   └── styles/               # globals.css & theme styling
 │   └── .env.example
+├── mobile/
+│   ├── src/
+│   │   ├── components/           # Mobile specific reusable components
+│   │   ├── contexts/             # AuthContext & ChatContext for mobile
+│   │   ├── screens/              # AuthScreen, HomeScreen, ChatScreen
+│   │   └── services/             # Mobile api & socket connections
+│   ├── android/                  # Android native source
+│   ├── ios/                      # iOS native source
+│   └── App.tsx                   # React Native entry point
 └── README.md
 ```
 
