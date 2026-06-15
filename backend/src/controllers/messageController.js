@@ -17,7 +17,7 @@ const getRoomMessages = async (req, res, next) => {
         .json({ success: false, message: "Room not found" });
     }
 
-    const messages = await Message.find({ room: roomId, isDeleted: false })
+    const messages = await Message.find({ room: roomId })
       .populate("sender", "username avatar")
       .sort({ createdAt: -1 }) // Newest first
       .skip(skip)
@@ -25,7 +25,6 @@ const getRoomMessages = async (req, res, next) => {
 
     const total = await Message.countDocuments({
       room: roomId,
-      isDeleted: false,
     });
 
     res.status(200).json({
@@ -63,8 +62,7 @@ const deleteMessage = async (req, res, next) => {
       });
     }
 
-    message.isDeleted = true;
-    await message.save();
+    await Message.findByIdAndDelete(req.params.messageId);
 
     res.status(200).json({ success: true, message: "Message deleted" });
   } catch (error) {

@@ -70,7 +70,7 @@ const socketHandler = (io, socket) => {
       );
 
       // Send last 50 messages (chat history) to the joining user only
-      const history = await Message.find({ room: roomId, isDeleted: false })
+      const history = await Message.find({ room: roomId })
         .populate("sender", "username avatar")
         .sort({ createdAt: -1 })
         .limit(50);
