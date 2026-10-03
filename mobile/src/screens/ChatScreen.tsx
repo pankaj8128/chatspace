@@ -49,7 +49,7 @@ const ChatScreen = () => {
 
   const roomMessagesRaw = activeRoom ? messages[activeRoom._id] : undefined;
   const roomMessages = roomMessagesRaw || [];
-  const displayMessages = React.useMemo(() => [...roomMessages].reverse(), [roomMessages]);
+  const displayMessages = React.useMemo(() => [...(roomMessagesRaw || [])].reverse(), [roomMessagesRaw]);
 
   // Reset pagination state when mounting new room
   useEffect(() => {
@@ -164,6 +164,11 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -230,29 +235,25 @@ const ChatScreen = () => {
       {renderTypingIndicator()}
 
       {/* Input */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      >
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, isGuest && styles.inputDisabled]}
-            placeholder={isGuest ? 'Guest view only. Create account to chat.' : `Message #${roomName}`}
-            placeholderTextColor="#9ca3af"
-            value={text}
-            onChangeText={handleChangeText}
-            editable={!isGuest}
-            multiline
-            maxLength={1000}
-          />
-          <TouchableOpacity
-            style={[styles.sendBtn, (isGuest || !text.trim()) && styles.sendBtnDisabled]}
-            onPress={handleSend}
-            disabled={isGuest || !text.trim()}
-          >
-            <Text style={styles.sendBtnText}>➤</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, isGuest && styles.inputDisabled]}
+          placeholder={isGuest ? 'Guest view only. Create account to chat.' : `Message #${roomName}`}
+          placeholderTextColor="#9ca3af"
+          value={text}
+          onChangeText={handleChangeText}
+          editable={!isGuest}
+          multiline
+          maxLength={1000}
+        />
+        <TouchableOpacity
+          style={[styles.sendBtn, (isGuest || !text.trim()) && styles.sendBtnDisabled]}
+          onPress={handleSend}
+          disabled={isGuest || !text.trim()}
+        >
+          <Text style={styles.sendBtnText}>➤</Text>
+        </TouchableOpacity>
+      </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
